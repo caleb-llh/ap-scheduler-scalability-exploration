@@ -1,12 +1,37 @@
 version: '3.8'
 services:
-    cache:
-        image: redis
-        restart: always
-        ports:
-        - '6379:6379'
-        volumes: 
-        - cache:/data
-volumes:
-  cache:
-    driver: local
+  redis:
+    image: redis
+    restart: always
+    ports:
+    - '6379:6379'
+  
+  schedulerA:
+    build: 
+      context: ./scheduler-api
+      dockerfile: Dockerfile
+    image: scheduler-api
+    environment:
+      - INITIAL_SLEEP_SECONDS=5
+      - TIMER_SECONDS=10
+    ports:
+      - '15563:15563'
+
+  schedulerB:
+    build: 
+      context: ./scheduler-api
+      dockerfile: Dockerfile
+    image: scheduler-api
+    environment:
+      - INITIAL_SLEEP_SECONDS=0
+      - TIMER_SECONDS=10
+    ports:
+      - '15564:15563'
+
+  api-server:
+    build: 
+      context: ./api-server
+      dockerfile: Dockerfile
+    image: api-server
+    ports:
+      - '15565:15565'
