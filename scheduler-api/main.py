@@ -61,8 +61,6 @@ async def post_add_job():
         trigger='interval', 
         seconds=TIMER_SECONDS,
         replace_existing=True,
-        # ensure callback runs only once
-        max_instances=1,
         # ensure job runs only once instead of every TIMER_SECONDS
         start_date=str(datetime.now()),
         end_date=str(datetime.now() + timedelta(seconds=TIMER_SECONDS*1.5))
